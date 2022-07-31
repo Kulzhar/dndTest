@@ -92,13 +92,13 @@ function go(){
    }
    const randomArr = fullArr.sort((a,b)=>0.5 -Math.random());
    for (var i= 0; i< groupSize; i++){
-       let temp = fullArr[Math.floor(Math.random() * (fullArr.length - 0 + 1) + 0)];
+       let temp = fullArr[generateRandom(0,fullArr.length)];
 
        let tempEncounterArr = [];
 
        tempEncounterArr["Name"] = document.getElementById("name_"+temp).value;
        tempEncounterArr["LP"] = document.getElementById("lp_"+temp).value;
-       tempEncounterArr["INI"] = Math.floor(Math.random() * (20 - 1 + 1) + 1) + parseInt(document.getElementById("ini_"+temp).value);
+       tempEncounterArr["INI"] = generateRandom(1,20) + parseInt(document.getElementById("ini_"+temp).value);
        tempEncounterArr["ID"] = temp;
        encounterArray[i] =  tempEncounterArr;
    }
@@ -113,5 +113,21 @@ function showErgebnis(encounterArray){
     newRow.textContent =encounterArray[i]['Name'] + " INI "+encounterArray[i]['INI'];
     ergebnis.append(newRow);
  }
+}
+function generateRandom(min = 0, max = 100) {
+
+// find diff
+let difference = max - min;
+
+// generate random number 
+let rand = Math.random();
+
+// multiply with difference 
+rand = Math.floor( rand * difference);
+
+// add with min value 
+rand = rand + min;
+
+return rand;
 }
 </script>

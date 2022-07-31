@@ -102,6 +102,7 @@ function removeLine(){
    if(unit.children.length>1){
     unit.removeChild(unit.lastChild);
    }
+   calculatePercent();
    
 }
 function go(){
@@ -128,10 +129,11 @@ function go(){
        tempEncounterArr["Name"] = document.getElementById("name_"+temp).value;
        tempEncounterArr["LP"] = document.getElementById("lp_"+temp).value;
        tempEncounterArr["INI"] = generateRandom(1,20) + parseInt(document.getElementById("ini_"+temp).value);
-       tempEncounterArr["ID"] = temp;
+
 
        sumArray[temp]= typeof sumArray[temp] == "undefined" ? 1:sumArray[temp]+1;
-       encounterArray[i] =  tempEncounterArr;
+       if(typeof encounterArray[temp] == "undefined") encounterArray[temp] = [];
+       encounterArray[temp].push(tempEncounterArr);
    }
    showErgebnis(encounterArray,sumArray);
 
@@ -147,11 +149,14 @@ function showErgebnis(encounterArray,sumArray){
     let newRow = document.createElement("div");
     newRow.textContent = "Detail";
     ergebnis.append(newRow);
-    for(i=0; i<encounterArray.length; i++){
-        let newRow = document.createElement("div");
-        newRow.textContent =encounterArray[i]['Name'] + " INI "+encounterArray[i]['INI'];
-        ergebnis.append(newRow);
+    for ( var key2 in encounterArray){
+        for(i=0; i<encounterArray[key2].length; i++){
+            let newRow = document.createElement("div");
+            newRow.textContent =encounterArray[key2][i]['Name'] + " INI "+encounterArray[key2][i]['INI'];
+            ergebnis.append(newRow);
+        }
     }
+
 }
 function generateRandom(min = 0, max = 100) {
 

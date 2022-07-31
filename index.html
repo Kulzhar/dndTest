@@ -1,0 +1,117 @@
+<style>
+
+    .leftSide,.rightSide{
+        width:50%;
+    }
+
+</style>
+<div style="width:100%; display:flex;">
+    <div class="leftSide">
+        <div>
+            <label>Gruppen größe</label>
+            <input id="groupsize" type="number">
+            <button style="height:20px;width:20px" id = "newline"></button>
+        </div>
+        <input type="text" readonly id="percentall">
+        <div class="units" id="unit">
+            <div id = "parentRow" class=" row">
+                <input id="name_0"row="0"  type="text" placeholder="Name">
+                <input id="lp_0" row="0" type="number" placeholder="LP" >
+                <input id="ini_0" row="0" type="number" placeholder="INI" value='0'>
+                <input id="percent_0" row="0" class="percentage" type="number" placeholder ="Prozent" onChange="calculatePercent()">
+            </div>
+        </div>
+        
+        <button style="height:40px; width:60px" id="calculate">GO</button>
+    </div>
+    <div class="rightSide">
+        Ergebnis:
+        <div id="ergebnis">
+
+        </div>
+    </div>
+</div>
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+  
+document.getElementById("newline").addEventListener("click",function(){
+    newLine();
+})
+document.getElementById("calculate").addEventListener("click",function(){
+    go();
+})
+
+
+}, false);
+function calculatePercent(){
+    var percentInputs = document.getElementsByClassName("percentage")
+    var summe = 0;
+    for(var i=0; i<percentInputs.length;i++){
+        percentInput = percentInputs[i];
+        if(typeof percentInput.value != "undefined" && percentInput.value!=""){
+            summe = summe + parseInt(percentInput.value);
+        }
+        
+    }
+    document.getElementById("percentall").value = summe
+    if(summe>100) document.getElementById("percentall").style.backgroundColor="red";
+    else document.getElementById("percentall").style.backgroundColor="white";
+}
+function newLine(){
+    var rows = document.getElementsByClassName("row").length;
+
+
+  var parentRow = document.getElementById("parentRow")
+   var children = parentRow.children;
+   var newRow = document.createElement("div");
+    newRow.classList.add("row")
+   for(var i=0; i<children.length;i++){
+       let child = children[i];
+       let copyChild = child.cloneNode(true);
+        tempId = copyChild.id;
+        tempArr = tempId.split("_");
+        copyChild.id = tempArr[0]+"_" +rows;
+       // copyChild.value = "";
+        copyChild.setAttribute("row",rows);
+        newRow.append(copyChild);
+   }
+   let units = document.getElementById("unit");
+   unit.append(newRow);
+}
+function go(){
+
+   let percentAll =  document.getElementById("percentall");
+   let percentagInputs = document.getElementsByClassName("percentage");
+   let groupSize  = parseInt(document.getElementById("groupsize").value);
+   var fullArr = [];
+   var encounterArray = [];
+   for(var i=0; i<percentagInputs.length;i++){
+        tempArr = Array(parseInt(percentagInputs[i].value)).fill(percentagInputs[i].getAttribute("row"))
+        fullArr = fullArr.concat(tempArr);
+   }
+   const randomArr = fullArr.sort((a,b)=>0.5 -Math.random());
+   for (var i= 0; i< groupSize; i++){
+       let temp = fullArr[Math.floor(Math.random() * (fullArr.length - 0 + 1) + 0)];
+
+       let tempEncounterArr = [];
+
+       tempEncounterArr["Name"] = document.getElementById("name_"+temp).value;
+       tempEncounterArr["LP"] = document.getElementById("lp_"+temp).value;
+       tempEncounterArr["INI"] = Math.floor(Math.random() * (20 - 1 + 1) + 1) + parseInt(document.getElementById("ini_"+temp).value);
+       tempEncounterArr["ID"] = temp;
+       encounterArray[i] =  tempEncounterArr;
+   }
+   showErgebnis(encounterArray);
+
+}
+function showErgebnis(encounterArray){
+    var ergebnis = document.getElementById("ergebnis")
+    ergebnis.innerHTML = '';
+ for(i=0; i<encounterArray.length; i++){
+    let newRow = document.createElement("div");
+    newRow.textContent =encounterArray[i]['Name'] + " INI "+encounterArray[i]['INI'];
+    ergebnis.append(newRow);
+ }
+}
+</script>

@@ -95,6 +95,7 @@ function newLine(){
    }
    let units = document.getElementById("unit");
    unit.append(newRow);
+   calculatePercent();
 }
 function removeLine(){
    var unit =  document.getElementById("unit");
@@ -110,6 +111,7 @@ function go(){
    let groupSize  = parseInt(document.getElementById("groupsize").value);
    var fullArr = [];
    var encounterArray = [];
+   var sumArray = [];
    for(var i=0; i<percentagInputs.length;i++){
        if( percentagInputs[i].value != ""){
         tempArr = Array(parseInt(percentagInputs[i].value)).fill(percentagInputs[i].getAttribute("row"))
@@ -119,7 +121,7 @@ function go(){
    }
    const randomArr = fullArr.sort((a,b)=>0.5 -Math.random());
    for (var i= 0; i< groupSize; i++){
-       let temp = fullArr[generateRandom(0,fullArr.length)];
+       let temp = parseInt(fullArr[generateRandom(0,fullArr.length)]);
 
        let tempEncounterArr = [];
 
@@ -127,19 +129,29 @@ function go(){
        tempEncounterArr["LP"] = document.getElementById("lp_"+temp).value;
        tempEncounterArr["INI"] = generateRandom(1,20) + parseInt(document.getElementById("ini_"+temp).value);
        tempEncounterArr["ID"] = temp;
+
+       sumArray[temp]= typeof sumArray[temp] == "undefined" ? 1:sumArray[temp]+1;
        encounterArray[i] =  tempEncounterArr;
    }
-   showErgebnis(encounterArray);
+   showErgebnis(encounterArray,sumArray);
 
 }
-function showErgebnis(encounterArray){
+function showErgebnis(encounterArray,sumArray){
     var ergebnis = document.getElementById("ergebnis")
     ergebnis.innerHTML = '';
- for(i=0; i<encounterArray.length; i++){
+    for (var key in sumArray){
+        let newRow = document.createElement("div");
+        newRow.textContent = sumArray[key]+" * " +document.getElementById("name_"+key).value;
+        ergebnis.append(newRow);
+    }
     let newRow = document.createElement("div");
-    newRow.textContent =encounterArray[i]['Name'] + " INI "+encounterArray[i]['INI'];
+    newRow.textContent = "Detail";
     ergebnis.append(newRow);
- }
+    for(i=0; i<encounterArray.length; i++){
+        let newRow = document.createElement("div");
+        newRow.textContent =encounterArray[i]['Name'] + " INI "+encounterArray[i]['INI'];
+        ergebnis.append(newRow);
+    }
 }
 function generateRandom(min = 0, max = 100) {
 
@@ -157,4 +169,3 @@ rand = rand + min;
 
 return rand;
 }
-</script>
